@@ -1,0 +1,18 @@
+body {
+    background-image: url("/public/14.png");
+    margin: 0;
+    padding: 0;
+}
+
+.portfolio-container {
+    width: 100%;
+    overflow-y: auto; /* Thêm thanh cuộn dọc nếu ảnh dài */
+}
+
+.portfolio-part {
+    width: 100%; /* Chiều rộng đầy màn hình */
+    height: auto; /* Giữ tỷ lệ chiều cao tự động */
+    display: block; /* Loại bỏ khoảng cách */
+    margin: 0;
+    padding: 0;
+}
