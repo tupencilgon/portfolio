@@ -1,22 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Redirecting…</title>
-  <script>
-    function goFigma() {
-      window.location.href = "https://www.figma.com/proto/RMVGeOUZ0ZPI7edKu2atO5/Kim-Anh-Portfolio--Eng-Ver-?page-id=0%3A1&node-id=28-2&viewport=495%2C66%2C0.28&t=kjMWgevEiLchJSYe-1&scaling=scale-down-width&content-scaling=fixed";
+
+  <!-- Nunito Extrabold (tạm thời dùng link mặc định; có thể thay bằng link bạn cung cấp) -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      /* Màu sắc bạn yêu cầu */
+      --bg: #FFF3D6;   /* vàng kem be nhẹ */
+      --pink: #FF5C8A; /* hồng nổi bật nhưng dịu */
+    }
+    html, body {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      display: grid;
+      place-items: center;
+      font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    .wrap {
+      text-align: center;
+      color: var(--pink);
+      /* Responsive cỡ chữ: min(… , …) để không quá lớn trên màn hình nhỏ */
+      font-weight: 800;
+      font-size: clamp(32px, 6vw, 80px);
+      line-height: 1.05;
+      letter-spacing: 0.5px;
+      user-select: none;
+    }
+    .label {
+      display: inline-block;
+      /* Nhẹ nhàng “thở” để có cảm giác sống động (tắt nếu user chọn reduce motion) */
+      animation: breathe 2.4s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%,100% { transform: translateY(0); }
+      50%     { transform: translateY(-2px); }
+    }
+    /* Chấm động: Loading. → Loading.. → Loading… (mỗi 400ms) */
+    .dots::after {
+      content: "…"; /* fallback nếu JS tắt */
+      display: inline-block;
+      width: 1.6em;      /* chỗ trống cố định để text không giật */
+      text-align: left;
     }
 
-    // Redirect ngay khi load
-    goFigma();
+    /* Trạng thái phụ & liên kết fallback */
+    .sub {
+      margin-top: 16px;
+      font-size: clamp(12px, 2.6vw, 16px);
+      font-weight: 800;
+      opacity: 0.75;
+    }
+    .sub a {
+      color: var(--pink);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
 
-    // Nếu vẫn kẹt ở trang này thì sau 30 giây thử lại
-    setTimeout(goFigma, 30000);
-  </script>
+    /* Tôn trọng reduce-motion */
+    @media (prefers-reduced-motion: reduce) {
+      .label { animation: none; }
+    }
+  </style>
 </head>
 <body>
-  <p>Nếu không tự chuyển hướng, nhấn vào đây: 
-     <a href="https://www.figma.com/proto/RMVGeOUZ0ZPI7edKu2atO5/Kim-Anh-Portfolio--Eng-Ver-?page-id=0%3A1&node-id=28-2&viewport=495%2C66%2C0.28&t=kjMWgevEiLchJSYe-1&scaling=scale-down-width&content-scaling=fixed">Xem portfolio</a></p>
+  <main class="wrap" aria-live="polite">
+    <span class="label">Loading<span class="dots">…</span></span>
+    <div class="sub">
+      Sẽ tự chuyển hướng ngay. Nếu không, thử lại sau 30 giây hoặc
+      <a id="fallbackLink" href="#" rel="nofollow noopener">nhấn vào đây</a>.
+    </div>
+  </main>
+
+  <script>
+    // TODO: Thay bằng link Figma của bạn
+    const FIGMA_URL = "https://www.figma.com/proto/RMVGeOUZ0ZPI7edKu2atO5/Kim-Anh-Portfolio--Eng-Ver-?page-id=0%3A1&node-id=28-2&viewport=495%2C66%2C0.28&t=kjMWgevEiLchJSYe-1&scaling=scale-down-width&content-scaling=fixed";
+
+    // Gắn link cho fallback click
+    document.getElementById("fallbackLink").href = FIGMA_URL;
+
+    // Hiệu ứng chấm chạy: ".", "..", "…"
+    (function animateDots(){
+      const dotsEl = document.querySelector('.dots');
+      const frames = [".", "..", "…"];
+      let i = 0;
+      setInterval(() => {
+        dotsEl.textContent = frames[i % frames.length];
+        i++;
+      }, 400);
+    })();
+
+    // Redirect ngay khi tải trang
+    function go() { window.location.href = FIGMA_URL; }
+    go();
+
+    // Nếu vẫn còn ở trang này, retry sau 30s (chỉ một lần)
+    setTimeout(() => {
+      // Nếu vì lý do gì đó vẫn chưa rời trang, thử lại 1 lần
+      try { go(); } catch (e) {}
+    }, 30000);
+  </script>
 </body>
 </html>
